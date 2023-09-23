@@ -1,53 +1,82 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import NavbarComponent from "../components/Navbar";
+import {Card, Col, Container, Row} from "react-bootstrap";
+import axios from "axios";
 
 const HomePage = () => {
+    const [posts, setPosts] = useState([]);
+
+    const fetchPosts = async () => {
+        const response = await axios.get("http://localhost:8000/api/post/")
+        return response.data;
+    }
+
+    useEffect(() => {
+        fetchPosts().then(data => setPosts(data))
+    }, [])
+
     return (
         <>
-            <div className="navbar">
-                <a style={{ textDecoration: "none", color: "rgb(12, 12, 12)" }} href="/blog.html">
-                    <h1><img src="/blog-brand.webp" alt="Blog Logo" /> Zvídavý občan</h1>
-                </a>
-                <h2>Projekty, projekty a zase projekty...</h2>
-            </div>
+            <NavbarComponent/>
 
-            <div className="main">
-                <div className="articles">
-                    <a style={{ textDecoration: "none", color: "rgb(12, 12, 12)" }} href="/blog/zahrada/2023-08-23-predstaveni-me-zahrady.html">
-                        <div className="article">
-                            <div className="article-image"><img src="/blog/zahrada/2023-08-23-predstaveni-me-zahrady/zahrada.webp" alt="Article Thumbnail" /></div>
-                            <div className="article-content">
-                                <div className="article-title">Zahrada #1 - Představení Mé Zahrady</div>
-                                <div className="article-description">
-                                    {/* Article content */}
-                                </div>
-                                <div className="article-footer">
-                                    <div className="date">23. 8. 2023</div>
-                                    <div className="rubric">Zahrada</div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
+            <Container className={"mt-5"}>
+                <Row>
+                    <Col lg={{order: 2, span: 9}}>
+                        <h1>Nejnovější příspěvky</h1>
+                        <div className={"mt-3 d-flex flex-row flex-wrap justify-content-between"}>
+                            {posts.map((post: any) => {
+                                return (
+                                    <Card className={"mt-5"} style={{width: "25em"}}>
+                                        <Card.Header>neco</Card.Header>
+                                        <Card.Img variant="top" src="/logo512.png" />
 
-                    {/* The second article goes here */}
-                </div>
-                <div className="sidebar">
-                    <div className="rubrics">
-                        <h2>Rubriky</h2>
-                        <hr />
-                        <div>
-                            <a href="/blog.html">Vše</a>
-                            <a href="/blog/obecne/index.html">Obecné</a>
-                            <a href="/blog/zahrada/index.html">Zahrada</a>
+                                        <Card.Body>
+                                            <Card.Title>Special title treatment</Card.Title>
+
+                                            <Card.Text>
+                                                {post.text}
+                                            </Card.Text>
+
+                                            <a href="#" className="btn btn-primary">Go somewhere</a>
+                                        </Card.Body>
+
+                                        <Card.Footer className="text-muted">2 days ago</Card.Footer>
+                                    </Card>
+                                )
+                            })}
                         </div>
-                    </div>
-                    <div className="author">
-                        <h2>Jan Kubát</h2>
-                        <p>
-                            {/* Author description */}
-                        </p>
-                    </div>
-                </div>
-            </div>
+                    </Col>
+                    <Col lg={{order: 1, span: 3}}>
+                        <Row>
+                            <Card>
+                                <Card.Body>
+                                    <Card.Title>Rubriky</Card.Title>
+
+                                    <Card.Text>
+                                        <ul>
+                                            <li>Item 1</li>
+                                            <li>Item 2</li>
+                                            <li>Item 3</li>
+                                        </ul>
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
+                        </Row>
+
+                        <Row className={"mt-5"}>
+                            <Card>
+                                <Card.Body>
+                                    <Card.Title>O autorovi</Card.Title>
+
+                                    <Card.Text>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
+                        </Row>
+                    </Col>
+                </Row>
+            </Container>
         </>
     );
 }

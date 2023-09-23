@@ -1,14 +1,18 @@
-import {useRef} from "react";
+import {useRef, useState} from "react";
 import axios from "axios";
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css';
+import {useNavigate} from "react-router-dom";
 
 const AddPostPage = () => {
-    const textAreaRef = useRef<HTMLTextAreaElement>(null);
+    const [value, setValue] = useState("");
+    const navigate = useNavigate()
 
     const addPost = () => {
         axios.post("http://localhost:8000/api/post/create", {
-            text: textAreaRef.current?.value
+            text: value
         }).then(() => {
-            alert("Post added!");
+            navigate("/")
         }).catch((reason) => {
             alert(reason);
         });
@@ -18,7 +22,7 @@ const AddPostPage = () => {
         <div>
             <h1>Add Post Page</h1>
 
-            <textarea ref={textAreaRef}></textarea>
+            <ReactQuill theme="snow" value={value} onChange={setValue} />
 
             <button onClick={addPost}>Log Text</button>
         </div>
